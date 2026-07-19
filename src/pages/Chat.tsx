@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
-import { AGENTS, sendToAgent } from "../lib/agents";
-import { loadHistory, saveMessage } from "../lib/supabase";
+import { AGENTS, sendToAgent } from "../agents";
+import { loadHistory, saveMessage } from "../supabaseClient";
 import { useToast } from "../context/ToastContext";
 import Avatar from "../components/Avatar";
 import TypingIndicator from "../components/TypingIndicator";

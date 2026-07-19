@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { AGENT_LIST } from "../lib/agents";
+import { AGENT_LIST } from "../agents";
 import Avatar from "../components/Avatar";
 import type { AgentConfig } from "../types";
 
