@@ -236,6 +236,31 @@
   gap: 16px;
 }
 
+.export-btn {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 8px 12px;
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.14);
+  transition: background 0.2s var(--ease), transform 0.2s var(--ease), opacity 0.2s var(--ease);
+}
+.export-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.24);
+  transform: translateY(-1px);
+}
+.export-btn:active:not(:disabled) {
+  transform: translateY(0) scale(0.97);
+}
+.export-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
 .back-btn {
   display: flex;
   align-items: center;
@@ -326,8 +351,18 @@
   justify-content: flex-start;
 }
 
-.msg-bubble {
+.msg-content {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
   max-width: 78%;
+}
+.msg-content--user {
+  flex-direction: row-reverse;
+}
+
+.msg-bubble {
+  max-width: 100%;
   padding: 12px 16px;
   border-radius: var(--radius-lg);
   font-size: 0.96rem;
@@ -347,6 +382,44 @@
   border: 1px solid var(--c-border);
   border-bottom-left-radius: 6px;
   box-shadow: var(--shadow-xs);
+}
+
+.msg-copy-btn {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  background: transparent;
+  opacity: 0;
+  transition: opacity 0.18s var(--ease), background 0.18s var(--ease), color 0.18s var(--ease), transform 0.18s var(--ease);
+}
+.msg-row--assistant:hover .msg-copy-btn {
+  opacity: 1;
+}
+.msg-copy-btn:hover {
+  background: var(--bg-muted);
+  color: var(--text-soft);
+  transform: scale(1.08);
+}
+.msg-copy-btn:active {
+  transform: scale(0.94);
+}
+.msg-copy-btn--copied {
+  opacity: 1;
+  color: #16a34a;
+}
+.msg-copy-btn--copied:hover {
+  color: #15803d;
+}
+
+@media (hover: none) {
+  .msg-copy-btn {
+    opacity: 1;
+  }
 }
 
 .msg-text {
@@ -553,6 +626,9 @@
   .msg-bubble {
     max-width: 85%;
   }
+  .msg-content {
+    max-width: 85%;
+  }
   .chat-input-area {
     padding: 12px 14px 14px;
   }
@@ -576,5 +652,11 @@
   }
   .msg-bubble {
     max-width: 88%;
+  }
+  .msg-content {
+    max-width: 88%;
+  }
+  .export-btn span {
+    display: none;
   }
 }
