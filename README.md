@@ -71,11 +71,11 @@ Your file structure should look like this:
 
 Before moving on, make sure every statement below is true.
 
-- [ ] Every agent works correctly by itself.
-- [ ] Every agent has a clear responsibility.
-- [ ] Tool calls work reliably.
-- [ ] The complete workflow runs from start to finish in the terminal.
-- [ ] Every team member understands how the backend works.
+- [v] Every agent works correctly by itself.
+- [v] Every agent has a clear responsibility.
+- [v] Tool calls work reliably.
+- [v] The complete workflow runs from start to finish in the terminal.
+- [v] Every team member understands how the backend works.
 
 Only after completing this checklist should you continue.
 
