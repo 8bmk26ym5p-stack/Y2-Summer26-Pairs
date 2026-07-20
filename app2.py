@@ -1,7 +1,7 @@
 import os
 from anthropic import Anthropic
 from dotenv import load_dotenv
-
+from tools import export_chat
 load_dotenv()
 
 client = Anthropic(api_key=os.getenv('ANTHROPIC_API_KEY'))
@@ -30,6 +30,11 @@ Response format:
 
         if user_input.lower() == 'exit':
             break
+
+        if user_input.lower() == "export":
+            filename = export_chat(history)
+            print(f"Conversation saved as {filename}")
+            continue
 
         history.append({'role': 'user', 'content': user_input})
         #print('History:' , history)
