@@ -1,14 +1,16 @@
 import os
 from anthropic import Anthropic
 from dotenv import load_dotenv
-from tools import export_chat
+
 load_dotenv()
 
 client = Anthropic(api_key=os.getenv('ANTHROPIC_API_KEY'))
 
-def run_agent():
+def run_chat():
     print('You: (type exit to quit)')
+    goal=input("What is your goal? ")
     system_message = """
+
 You are Sahar, an independent American political moderator.
 Your job is to objectively analyze political discussions and compare arguments from both Democratic and Republican perspectives.
 
@@ -27,23 +29,23 @@ Response format:
 3. Present the Republican perspective.
 4. Conclude with a balanced comparison highlighting the strongest arguments from each side.
 5. End by suggesting a thoughtful question that encourages further discussion rather than taking a side.
-
-"""
-    history = []
-
+    """
+    num=1
     while True:
-        user_input = input('>> ')
+        print("       \n----------\n         ")
+        user_input = input('>> ') + str(num)
 
         if user_input.lower() == 'exit':
             break
-
-        if user_input.lower() == "export":
-            filename = export_chat(history)
-            print(f"Conversation saved as {filename}")
+        elif user_input.lower() == 'reset':
+            history = []
+            print('History cleared.')
             continue
+        
+        num += 1
 
         history.append({'role': 'user', 'content': user_input})
-        #print('History:' , history)
+
         response = client.messages.create(
             model='claude-haiku-4-5-20251001',
             max_tokens=300,
@@ -51,10 +53,10 @@ Response format:
             system=system_message,
             messages=history
         )
-        #print(response)
+
+
         reply = response.content[0].text
-        print(f'Claude: {reply}')
+        print(f'lior: {reply}')
         history.append({'role': 'assistant', 'content': reply})
 
-if __name__ == "__main__":
-    run_agent()
+run_chat()

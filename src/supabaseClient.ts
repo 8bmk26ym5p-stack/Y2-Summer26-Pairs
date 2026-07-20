@@ -38,3 +38,12 @@ export async function saveMessage(
   if (error) throw error;
   return data as ChatMessage | null;
 }
+
+export async function resetHistory(sessionId: string, agent: AgentId): Promise<void> {
+  const { error } = await supabase
+    .from("messages")
+    .delete()
+    .eq("session_id", sessionId)
+    .eq("agent", agent);
+  if (error) throw error;
+}

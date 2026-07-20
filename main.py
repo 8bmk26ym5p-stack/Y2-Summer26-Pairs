@@ -35,6 +35,7 @@ MODEL = "claude-haiku-4-5-20251001"
 
 def get_agent_response(agent_key: str, history: list) -> str:
     """Generates a response from the specified agent using shared conversation context."""
+    
     formatted_messages = []
     for msg in history:
         formatted_messages.append({"role": msg["role"], "content": msg["content"]})
@@ -95,12 +96,12 @@ def debate_loop():
             history.append({"role": "user", "content": "[User to Sahar]: Please provide a neutral moderation summary."})
             current_agent = "3"
         elif user_input == "":
-            # auto formatting assistant output into user context for the next turn
+            #auto formatting assistant output into user context for the next turn
             if history[-1]["role"] == "assistant":
                 last_reply = history.pop()
                 history.append({"role": "user", "content": f"Opposing side replied: {last_reply['content']}"})
 
-        #fetch candidate or moderator response
+        #fetch candidate/moderator response
         try:
             name = NAMES[current_agent]
             print(f"\n🤖 {name} is thinking...")
@@ -119,7 +120,7 @@ def debate_loop():
                 current_agent = "1"
 
         except Exception as e:
-            print(f"\n❌ Error calling Anthropic API: {e}")
+            print(f"\n Error calling Anthropic API: {e}")
             break
 
 
