@@ -104,7 +104,7 @@ def debate_loop():
         #fetch candidate/moderator response
         try:
             name = NAMES[current_agent]
-            print(f"\n🤖 {name} is thinking...")
+            print(f"\n {name} is thinking...")
             reply = get_agent_response(current_agent, history)
 
             print(f"\n[{name}]:\n{reply}")
