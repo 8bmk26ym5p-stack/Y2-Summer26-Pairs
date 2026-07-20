@@ -1,6 +1,6 @@
 from app1 import run_agent as bahaa_agent
 from app2 import run_agent as yousef_agent
-from app3 import run_chat as sahar_agent
+from app3 import run_agent as sahar_agent
 
 
 def menu():
