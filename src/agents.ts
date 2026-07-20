@@ -35,9 +35,26 @@ export const AGENTS: Record<AgentId, AgentConfig> = {
       gradient: "linear-gradient(135deg, #DC2626 0%, #EF4444 100%)",
     },
   },
+  mediator: {
+    id: "mediator",
+    name: "The Mediator",
+    party: "Neutral Moderator",
+    partyShort: "Moderator",
+    description: "Balanced, objective analysis that weighs both sides of every issue.",
+    initials: "M",
+    colors: {
+      primary: "#0F766E",
+      primaryRgb: "15, 118, 110",
+      light: "#14B8A6",
+      lightRgb: "20, 184, 166",
+      border: "#5EEAD4",
+      bubbleBg: "#F0FDFA",
+      gradient: "linear-gradient(135deg, #0F766E 0%, #14B8A6 100%)",
+    },
+  },
 };
 
-export const AGENT_LIST: AgentConfig[] = [AGENTS.bahaa, AGENTS.yousef];
+export const AGENT_LIST: AgentConfig[] = [AGENTS.bahaa, AGENTS.yousef, AGENTS.mediator];
 
 const EDGE_BASE = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1`;
 const HEADERS: Record<string, string> = {
@@ -45,14 +62,19 @@ const HEADERS: Record<string, string> = {
   Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
 };
 
+const ENDPOINTS: Record<AgentId, string> = {
+  bahaa: "agent-bahaa",
+  yousef: "agent-yousef",
+  mediator: "agent-mediator",
+};
+
 export async function sendToAgent(
   agent: AgentId,
   history: ChatMessage[]
 ): Promise<string> {
-  const endpoint = agent === "bahaa" ? "agent-bahaa" : "agent-yousef";
   const messages = history.map((m) => ({ role: m.role, content: m.content }));
 
-  const res = await fetch(`${EDGE_BASE}/${endpoint}`, {
+  const res = await fetch(`${EDGE_BASE}/${ENDPOINTS[agent]}`, {
     method: "POST",
     headers: HEADERS,
     body: JSON.stringify({ messages }),

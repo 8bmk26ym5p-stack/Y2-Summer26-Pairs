@@ -1,4 +1,4 @@
-export type AgentId = "bahaa" | "yousef";
+export type AgentId = "bahaa" | "yousef" | "mediator";
 
 export interface ChatMessage {
   id: string;
