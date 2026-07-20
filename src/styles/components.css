@@ -15,7 +15,7 @@
 }
 
 /* =========================================================
-   Landing — three sections, no title
+   Landing — three full-color vertical stripes, no title
    ========================================================= */
 .landing-sections {
   display: grid;
@@ -33,54 +33,39 @@
   padding: 48px 28px;
   cursor: pointer;
   overflow: hidden;
-  transition: flex-grow 0.5s var(--ease-out);
   isolation: isolate;
   outline: none;
+  color: #fff;
+  background: var(--sec-gradient);
+  transition: transform 0.4s var(--ease-out), filter 0.4s var(--ease);
 }
 
 .debate-section:focus-visible {
-  box-shadow: inset 0 0 0 3px rgba(var(--sec-primary-rgb), 0.5);
+  box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.6);
 }
 
-.debate-section--left {
-  background:
-    radial-gradient(ellipse at 50% 30%, rgba(var(--sec-light-rgb), 0.14) 0%, transparent 60%),
-    var(--surface);
-  border-right: 1px solid var(--border);
-}
-
-.debate-section--center {
-  background:
-    radial-gradient(ellipse at 50% 30%, rgba(var(--sec-light-rgb), 0.16) 0%, transparent 62%),
-    var(--bg-muted);
-  border-right: 1px solid var(--border);
-}
-
-.debate-section--right {
-  background:
-    radial-gradient(ellipse at 50% 30%, rgba(var(--sec-light-rgb), 0.14) 0%, transparent 60%),
-    var(--surface);
-}
-
-.section-glow {
+/* Subtle interactive overlay: brightens on hover, dims slightly at rest */
+.section-overlay {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 360px;
-  height: 360px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(var(--sec-primary-rgb), 0.18) 0%, transparent 70%);
-  transform: translate(-50%, -50%) scale(0.8);
-  opacity: 0;
-  transition: opacity 0.5s var(--ease), transform 0.5s var(--ease-out);
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 35%, rgba(255, 255, 255, 0.14) 0%, transparent 55%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.18) 100%);
+  opacity: 0.8;
+  transition: opacity 0.4s var(--ease);
   pointer-events: none;
   z-index: 0;
 }
 
-.debate-section:hover .section-glow,
-.debate-section:focus-visible .section-glow {
+.debate-section:hover {
+  transform: scale(1.015);
+  filter: brightness(1.06);
+}
+.debate-section:hover .section-overlay {
   opacity: 1;
-  transform: translate(-50%, -50%) scale(1.1);
+}
+.debate-section:active {
+  transform: scale(0.99);
 }
 
 .section-content {
@@ -104,25 +89,30 @@
   font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.04em;
-  padding: 5px 12px;
+  padding: 5px 14px;
   border-radius: var(--radius-full);
   text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  backdrop-filter: blur(4px);
 }
 
 .section-name {
   font-size: clamp(1.8rem, 3.5vw, 2.4rem);
   font-weight: 700;
   letter-spacing: -0.02em;
-  color: var(--text);
+  color: #fff;
   line-height: 1.1;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
 }
 
 .section-desc {
-  color: var(--text-soft);
+  color: rgba(255, 255, 255, 0.92);
   font-size: 0.98rem;
   line-height: 1.55;
   margin: 0 auto;
   max-width: 280px;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.2);
 }
 
 .section-cta {
@@ -133,16 +123,16 @@
   margin-top: 6px;
   padding: 12px 22px;
   border-radius: var(--radius);
-  color: #fff;
+  color: var(--sec-primary, #fff);
+  background: #fff;
   font-size: 0.98rem;
   font-weight: 600;
-  box-shadow: 0 4px 14px rgba(var(--sec-primary-rgb), 0.35);
-  transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease), filter 0.2s var(--ease);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22);
+  transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease);
 }
 .section-cta:hover {
-  transform: scale(1.03);
-  filter: brightness(1.05);
-  box-shadow: 0 8px 22px rgba(var(--sec-primary-rgb), 0.45);
+  transform: scale(1.04);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.3);
 }
 .section-cta:active {
   transform: scale(0.99);
@@ -154,12 +144,9 @@
   transform: translateX(3px);
 }
 
-/* Center section emphasis */
-.debate-section--center .section-name {
-  font-size: clamp(2rem, 4vw, 2.7rem);
-}
-.debate-section--center {
-  box-shadow: inset 0 0 0 1px var(--border);
+/* Divider between stripes */
+.debate-section + .debate-section {
+  border-left: 1px solid rgba(255, 255, 255, 0.25);
 }
 
 /* =========================================================
@@ -665,16 +652,13 @@
     overflow-y: auto;
   }
   .debate-section {
-    border-right: none;
-    border-bottom: 1px solid var(--border);
+    border-left: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.25);
     min-height: 38vh;
     padding: 32px 22px;
   }
-  .debate-section--right {
+  .debate-section:last-child {
     border-bottom: none;
-  }
-  .debate-section--center {
-    box-shadow: inset 0 1px 0 var(--border), inset 0 -1px 0 var(--border);
   }
 }
 

@@ -49,9 +49,15 @@ export default function Chat() {
     if (!agent) navigate("/", { replace: true });
   }, [agent, navigate]);
 
-  // Load history once per agent.
+  // Load history once per agent. The loadingRef guard prevents re-entrancy
+  // from StrictMode double-invocation or any other re-render.
+  const loadingRef = useRef<string | null>(null);
+
   useEffect(() => {
     if (!agent) return;
+    if (loadingRef.current === agent.id) return;
+    loadingRef.current = agent.id;
+
     let cancelled = false;
     setHistoryLoaded(false);
     setLoading(true);
