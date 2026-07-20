@@ -1,4 +1,4 @@
-# Y2-Summer26-Pair-Project
+#Y2-Summer26-Pair-Project
 # Objective
 
 During Labs 1-3, each of you built an AI agent using the Claude API. Your agent could complete a task through the terminal, but it worked independently and had no graphical interface.
