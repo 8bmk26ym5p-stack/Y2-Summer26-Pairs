@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import { AGENTS, sendToAgent } from "../agents";
-import { loadHistory, saveMessage } from "../supabaseClient";
+import { loadHistory, saveMessage, resetHistory } from "../supabaseClient";
 import { useToast } from "../context/ToastContext";
 import Avatar from "../components/Avatar";
 import TypingIndicator from "../components/TypingIndicator";
@@ -33,6 +33,8 @@ export default function Chat() {
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
   const [historyLoaded, setHistoryLoaded] = useState(false);
+  const [showExitModal, setShowExitModal] = useState(false);
+  const [resetting, setResetting] = useState(false);
 
   const sessionIdRef = useRef<string>(getOrCreateSession());
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -180,6 +182,34 @@ export default function Chat() {
     }
   }, [showToast]);
 
+  const requestExit = useCallback(() => {
+    setShowExitModal(true);
+  }, []);
+
+  const confirmExit = useCallback(
+    async (doReset: boolean) => {
+      if (doReset && agent) {
+        setResetting(true);
+        try {
+          await resetHistory(sessionIdRef.current, agent.id);
+          setMessages([]);
+        } catch {
+          showToast("Could not reset history. Leaving anyway.", "error");
+        } finally {
+          setResetting(false);
+        }
+      }
+      setShowExitModal(false);
+      navigate("/");
+    },
+    [agent, navigate, showToast]
+  );
+
+  const dismissModal = useCallback(() => {
+    setShowExitModal(false);
+    requestAnimationFrame(() => inputRef.current?.focus());
+  }, []);
+
   const handleExport = useCallback(() => {
     if (!agent || messages.length === 0) return;
     const date = new Date().toLocaleString();
@@ -227,7 +257,7 @@ export default function Chat() {
         <div className="chat-header-inner">
           <button
             className="back-btn"
-            onClick={() => navigate("/")}
+            onClick={requestExit}
             aria-label="Back to candidates"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -346,6 +376,45 @@ export default function Chat() {
           Press <kbd>Enter</kbd> to send · <kbd>Shift</kbd> + <kbd>Enter</kbd> for a new line
         </p>
       </footer>
+
+      {showExitModal && (
+        <div className="modal-overlay" onClick={dismissModal}>
+          <div
+            className="modal-card scale-in"
+            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="exit-modal-title"
+          >
+            <h3 id="exit-modal-title" className="modal-title">
+              Leave this conversation?
+            </h3>
+            <p className="modal-body">
+              Would you like to reset the chat with {agent.name}? This permanently
+              deletes the conversation history.
+            </p>
+            <div className="modal-actions">
+              <button className="modal-btn modal-btn--ghost" onClick={dismissModal} disabled={resetting}>
+                Stay
+              </button>
+              <button
+                className="modal-btn modal-btn--secondary"
+                onClick={() => confirmExit(false)}
+                disabled={resetting}
+              >
+                Leave, keep history
+              </button>
+              <button
+                className="modal-btn modal-btn--primary"
+                onClick={() => confirmExit(true)}
+                disabled={resetting}
+              >
+                {resetting ? "Resetting…" : "Reset & leave"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
