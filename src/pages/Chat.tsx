@@ -6,7 +6,7 @@ import { loadHistory, saveMessage } from "../supabaseClient";
 import { useToast } from "../context/ToastContext";
 import Avatar from "../components/Avatar";
 import TypingIndicator from "../components/TypingIndicator";
-import type { AgentConfig, ChatMessage } from "../types";
+import type { AgentConfig, AgentId, ChatMessage } from "../types";
 
 const SESSION_KEY = "apd.session_id";
 
@@ -24,8 +24,9 @@ export default function Chat() {
   const navigate = useNavigate();
   const { showToast } = useToast();
 
-  const agent: AgentConfig | undefined =
-    agentId === "bahaa" || agentId === "yousef" ? AGENTS[agentId] : undefined;
+  const agent: AgentConfig | undefined = agentId
+    ? AGENTS[agentId as AgentId]
+    : undefined;
 
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
@@ -36,6 +37,10 @@ export default function Chat() {
   const sessionIdRef = useRef<string>(getOrCreateSession());
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  // Keep latest showToast in a ref so the history effect doesn't depend on it.
+  const showToastRef = useRef(showToast);
+  showToastRef.current = showToast;
 
   // Invalid agent id → bounce to landing.
   useEffect(() => {
@@ -53,7 +58,7 @@ export default function Chat() {
         const history = await loadHistory(sessionIdRef.current, agent.id);
         if (!cancelled) setMessages(history);
       } catch {
-        if (!cancelled) showToast("Could not load chat history.", "error");
+        if (!cancelled) showToastRef.current("Could not load chat history.", "error");
       } finally {
         if (!cancelled) {
           setHistoryLoaded(true);
@@ -64,7 +69,7 @@ export default function Chat() {
     return () => {
       cancelled = true;
     };
-  }, [agent, showToast]);
+  }, [agent]);
 
   // Autoscroll to newest message.
   useEffect(() => {
