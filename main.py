@@ -56,6 +56,7 @@ def debate_loop():
     print("      Republicans vs Democrats Multi-Agent Debate")
     print("==================================================")
     print("Commands:")
+    print("(Enter a number from the following options in its format to proceed)")
     print("  [Enter]          : Let the opposing candidate speak next")
     print("  1 <your message> : Address Bahaa (Democrat)")
     print("  2 <your message> : Address Yousef (Republican)")
@@ -129,6 +130,7 @@ def menu():
         print("\n---------------------------------")
         print("      Republicans vs Democrats")
         print("---------------------------------")
+        print("(Type in a number from the following options to proceed)")
         print("1. Start Multi-Agent Interactive Debate")
         print("2. Exit")
 
